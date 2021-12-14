@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5
+    restart: always
+    environment:
+      MYSQL_DATABASE: "join_us"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - new
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: nodejs-sql-app
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    expose:
+      - 3000  
+    stdin_open: true
+    tty: true
+    networks:
+      - new
+    environment:
+#https://www.datanovia.com/en/lessons/docker-compose-wait-for-container-using-wait-tool/docker-compose-wait-for-mysql-container-to-be-ready/
+      - WAIT_HOSTS=db:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=60
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+
+volumes:
+  db-data:
+networks:
+  new:

@@ -2,9 +2,9 @@ body {
   text-align: center;
   text-shadow: 0 .05rem .1rem rgba(0,0,0,.5);
   font-family: 'Roboto', sans-serif;
-  color: rgb(66,69,86);
+  color: whitesmoke;
   height: 100%;
-  background-image: url('http://i.imgur.com/BJP2Q1j.jpg');
+  background-image: url('https://cdn.wallpapersafari.com/6/10/zGM5b2.gif');
   background-size: cover;
   font-weight: 100;
 }
@@ -18,7 +18,7 @@ body {
 
 h1{
   margin: 0;
-  font-size: 500px;
+  font-size: 70px;
   line-height: 400px;
   font-weight: 100;
 }
@@ -34,7 +34,7 @@ p {
 	border-bottom: 3px solid #ebebeb;
 	margin-top: 100px;
 	width: 700px;
-	font-size: 2.9em;
+	font-size: 2.0em;
 	color: white;
 	padding: 5px 10px;
 	background: transparent;
@@ -44,7 +44,7 @@ button {
     line-height: 2.0;
     border: none;
     border:3px solid white;
-    font-size: 1.9em;
+    font-size: 1.0em;
     color: rgb(66,69,86);
     padding: 5px 30px;
     background: rgba(255,255,255,1.0);

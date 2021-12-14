@@ -1,9 +1,7 @@
-# MySQL Bootcamp Guided Project
+# MySQL Webpage Served With Docker
 
-Guided project using MySQL and several Node.js packages to demonstrate how database information can be serve to the frontend.
+Uses Docker Compose, MySQL and several Node.js packages to demonstrate how database information can be serve to the frontend in containers.
 
-All code archived in this repository was demonstrated by course instructor in course videos and replicated by me coding while following the videos.
-
-Demonstration video is also archived here.
+The HTML,CSS & JS codes archived in this repository has been referenced from the below course instructor and has been edited to integrate into the docker container environment.
 
 Course link (as at Dec 2021): https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to-expert/

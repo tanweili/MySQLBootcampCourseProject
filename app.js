@@ -1,4 +1,4 @@
-// var faker = require('faker');
+var faker = require('faker');
 var mysql = require('mysql');
 var express = require('express');
 var app = express();
@@ -9,63 +9,79 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 
 var connection = mysql.createConnection({
-	host     : 'localhost',
-	user     : 'root',
-	database : 'join_us'
+	host     : 'db',
+	user     : 'user',
+	database : 'join_us',
+	password : 'password',
+	port : '3306'
 });
 
-// var q = "SELECT COUNT(*) AS 'num' FROM users;";
+connection.connect(function(err) {
+if (err) {
+  console.error('error connecting: ' + err.stack);
+  return;
+}
+console.log('connected as id ' + connection.threadId);
+});
 
-// connection.query(q, function (error, results, fields) {
-//    if (error) throw error;
-//    console.log(results);
-// });
+var q = "CREATE TABLE users (email VARCHAR(100) UNIQUE, created_at TIMESTAMP DEFAULT NOW());";
 
-// var data = [];
-// for(var i = 0; i < 500; i++){
-//     data.push([
-//         faker.internet.email(),
-//         faker.date.past()
-//     ]);
-// }
+connection.query(q, function (error, results, fields) {
+   if (error) throw error;
+   console.log(results);
+});
+
+var data = [];
+for(var i = 0; i < 300; i++){
+    data.push([
+        faker.internet.email(),
+        faker.date.past()
+    ]);
+}
+
+var q = 'INSERT INTO users (email, created_at) VALUES ?';
  
-// var q = "SELECT DATE_FORMAT(created_at,'%b %D %Y') AS 'earliest_date' FROM users ORDER BY created_at ASC LIMIT 1";
- 
-// connection.query(q, function(err, result) {
-//   console.log(err);
-//   console.log(result[0]);
-// });
-// connection.end();
+connection.query(q, [data], function(err, result) {
+  console.log(err);
+  console.log(result);
+});
+
+var q = "SELECT COUNT(*) FROM users;";
+
+connection.query(q, function (error, results, fields) {
+   if (error) throw error;
+   console.log("COUNT(*) is:" + results[0]);
+});
+
+app.listen(3000, function () {
+	console.log('This line is working and is from app.js copied into docker image!');
+});
 
 app.get("/", function(request, response) {
-	var q = 'SELECT COUNT(*) as count FROM users';
-	connection.query(q, function (error, results) {
-		if (error) throw error;
-		var count = results[0].count;
-		response.render("home", {count: count});
+	var q = "SELECT COUNT(*) AS count FROM users";
+	connection.query(q, function (error1, results1) {
+		if (error1) throw error1;
+		var count = results1[0].count;
+		var p = "SELECT email AS randemail FROM users ORDER BY RAND() LIMIT 1";
+		connection.query(p, function (error2, results2) {
+			if (error2) throw error2;
+			var randemail = results2[0].randemail;
+			response.render("home", {count: count,randemail: randemail});
+		});
 	});
-});
-
-app.get("/joke", function(request, response){
-	var joke = "What do you call a dog that does magic tricks? A labracadabrador.";
-	response.send(joke);
-});
-
-app.get("/random_num", function(request, response){
-	var num = Math.floor((Math.random() * 10) + 1);
-	response.send("Your lucky number is " + num);
 });
 
 app.post("/register",function(request,response) {
 	var person = {
 		email: request.body.email
 	};
-	connection.query("INSERT INTO users SET ?", person, function(error, result) {
+	if (request.body.email === "") {
+		response.redirect("/");
+	}
+	else {
+		connection.query("INSERT INTO users SET ?", person, function(error, result) {
 		if (error) throw error;
 		response.redirect("/");
-	});
-});
-
-app.listen(3000, function () {
-	console.log('App listening on port 3000!');
+		});
+	}
 });
